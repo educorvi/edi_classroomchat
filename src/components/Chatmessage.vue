@@ -28,7 +28,7 @@
         },
         computed: {
             isSelf() {
-                return this.user===this.message.user
+                return this.user === this.message.user
             }
         },
     }
@@ -45,6 +45,7 @@
         width: 100%;
         display: flex;
     }
+
     .leftDiv {
         @extend .messageDivs;
         justify-content: flex-start;
