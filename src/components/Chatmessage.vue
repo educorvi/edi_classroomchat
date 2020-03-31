@@ -2,7 +2,7 @@
     <div :class="isSelf?'rightDiv':'leftDiv'" @contextmenu="handler($event)">
         <b-card no-body class="message">
             <b-card-header v-if="!isSelf">
-                <p class="m-n2" style="font-size: small">Nutzer {{message.user}}</p>
+                <p class="m-n2" style="font-size: small">{{userName}}</p>
             </b-card-header>
             <b-card-body>
                 <p class="m-n2 mt-n3" v-if="!message.deleted">{{message.text}}</p>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import {getUserId, deleteChat} from "@/database";
+    import {getUserId, deleteChat, getNameOfUser} from "@/database";
 
     export default {
         name: "Chatmessage",
@@ -32,6 +32,9 @@
         computed: {
             isSelf() {
                 return getUserId(this.user) === this.message.user
+            },
+            userName() {
+                return getNameOfUser(this.message.user)
             }
         },
         methods: {

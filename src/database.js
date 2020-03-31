@@ -6,18 +6,21 @@ import store from "./store/index"
 // PouchDB.plugin(pdau);
 
 // const local = new PouchDB('chatcouch');
-const remoteCouch = new PouchDB("https://chatgrabber:ABCCBA77145@couch.kraeks.de/chatroom_1");
+// const remoteCouch = new PouchDB("https://chatgrabber:ABCCBA77145@couch.kraeks.de/chatroom_1");
+let remoteCouch;
 // const remoteCouch = "http://astra2441.server4you.de:5984/chatroom_1";
 // const remote = new PouchDB(remoteCouch);
 // remote.logIn('chatgrabber', 'ABCCBA77145').then(function (batman) {
 //     console.log("I'm Batman.");
 // });
 
-
-remoteCouch.changes({
-    since: 'now',
-    live: true
-}).on('change', getAllMessages);
+export function setRemote() {
+   remoteCouch = new PouchDB(store.getters.remoteCouch)
+    remoteCouch.changes({
+        since: 'now',
+        live: true
+    }).on('change', getAllMessages);
+}
 
 
 // function sync() {
@@ -70,6 +73,13 @@ export function getAllMessages() {
 
 export function getUserId({name, pin}) {
     return name + "_" + pin;
+}
+
+export function getNameOfUser(user) {
+    const classlist = store.getters.classlist;
+    // const search = getUserId(user);
+
+    return classlist.filter(listitem => getUserId(listitem) === user)[0].name;
 }
 
 export function areUsersEqual(user1, user2) {
