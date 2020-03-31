@@ -6,7 +6,7 @@
             </b-card-header>
             <b-card-body>
                 <p class="m-n2 mt-n3">{{message.text}}</p>
-                <p class="mt-2 mb-n3 mr-n3 text-muted float-right">{{message.time.toLocaleTimeString()}}</p>
+                <p class="mt-2 mb-n3 mr-n3 text-muted float-right">{{new Date(message.time).toLocaleTimeString()}}</p>
             </b-card-body>
         </b-card>
     </div>

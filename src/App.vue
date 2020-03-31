@@ -9,12 +9,18 @@
     margin-left: 12px;
     margin-right: 12px;
     margin-top: 12px;
-    padding-bottom: 10vh;
+    padding-bottom: 70px;
+    /*max-width: 500px;*/
   }
 </style>
 <script>
   import Home from "@/views/Home";
+  import {getAllMessages} from "@/database";
+
   export default {
-    components: {Home}
+    components: {Home},
+    created() {
+      getAllMessages();
+    }
   }
 </script>

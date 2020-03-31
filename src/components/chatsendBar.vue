@@ -1,7 +1,7 @@
 <template>
     <div id="senddiv">
         <b-form inline @submit="send">
-            <b-row style="width: 100%">
+            <b-row align-v="center" style="width: 100%">
                 <b-col cols="8">
                     <b-input v-model="newMessage" placeholder="Nachricht senden" style="width: 100%"></b-input>
                 </b-col>
@@ -45,6 +45,7 @@
         width: 100%;
         padding: 12px;
         background-color: white;
-        height: 10vh;
+        height: 60px;
+        /*max-width: 500px;*/
     }
 </style>
