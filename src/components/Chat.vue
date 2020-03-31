@@ -1,8 +1,10 @@
 <template>
-    <div id="chathistory">
-        <b-alert fade class="rounded-0" :show="!connected" variant="danger" id="alert">Keine Verbindung zum Internet</b-alert>
+    <div id="chathistory" v-show="first || first === 0">
+        <b-alert fade class="rounded-0" :show="!connected" variant="danger" id="alert">Keine Verbindung zum Internet
+        </b-alert>
+        <b-button v-if="first>0" @click="revealOlder" style="width: 100%">Ältere Nachrichten</b-button>
         <transition-group name="chat" @after-enter="customScroll">
-            <chatmessage v-for="message in messages" :user="user"
+            <chatmessage v-for="message in shortendMessages" :user="user"
                          :key="message.user+new Date(message.time).toISOString()" :message="message"/>
         </transition-group>
         <chatsend-bar @send="send"/>
@@ -12,8 +14,9 @@
 <script>
     import Chatmessage from "@/components/Chatmessage";
     import ChatsendBar from "@/components/chatsendBar";
-    import {putMessage} from "@/database";
+    import {putMessage, getAllMessages} from "@/database";
     import {mapGetters} from "vuex"
+    import store from "@/store/index"
 
     export default {
         name: "Chat",
@@ -29,16 +32,27 @@
             }
         },
         computed: {
-            ...mapGetters(["messages"])
+            ...mapGetters(["messages", "scrollWithChat"]),
+            shortendMessages() {
+                return this.messages ? this.messages.slice(this.first, this.messages.length) : []
+            }
         },
         mounted() {
-            console.log(this.messages);
             window.addEventListener('online', () => {
                 this.connected = true;
             });
 
             window.addEventListener('offline', () => {
                 this.connected = false;
+            });
+            window.onscroll = function () {
+                store.state.scrollWithChat = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight;
+            };
+        },
+        created() {
+            getAllMessages().then(() => {
+                this.first = this.messages.length - Math.min(this.messages.length, 50);
+                window.scrollTo(0, document.getElementById("chathistory").scrollHeight);
             });
         },
         methods: {
@@ -50,14 +64,25 @@
                 })
             },
             customScroll() {
-                window.scrollTo(0, document.getElementById("chathistory").scrollHeight);
-            }
+                if (this.scrollWithChat) {
+                    window.scrollTo(0, document.getElementById("chathistory").scrollHeight);
+                }
+            },
+            revealOlder() {
+                this.$store.state.scrollWithChat = false;
+                this.first = this.first<50 ? 0: this.first-50;
+            },
         },
         data() {
             return {
-                connected: true
+                connected: true,
+                first: null
             }
         },
+        watch: {
+            scrollWithChat: () => window.scrollTo(0, document.getElementById("chathistory").scrollHeight)
+        }
+
     }
 </script>
 

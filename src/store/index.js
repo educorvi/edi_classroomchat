@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    messages: null
+    messages: null,
+    scrollWithChat: true
   },
   mutations: {
   },
@@ -14,6 +15,7 @@ export default new Vuex.Store({
   modules: {
   },
   getters: {
-    messages: state => state.messages
+    messages: state => state.messages,
+    scrollWithChat: state => state.scrollWithChat
   }
 })
