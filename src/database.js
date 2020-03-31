@@ -5,8 +5,8 @@ import store from "./store/index"
 
 // PouchDB.plugin(pdau);
 
-const local = new PouchDB('chatcouch');
-const remoteCouch = new PouchDB("http://chatgrabber:ABCCBA77145@astra2441.server4you.de:5984/chatroom_1");
+// const local = new PouchDB('chatcouch');
+const remoteCouch = new PouchDB("https://chatgrabber:ABCCBA77145@couch.kraeks.de/chatroom_1");
 // const remoteCouch = "http://astra2441.server4you.de:5984/chatroom_1";
 // const remote = new PouchDB(remoteCouch);
 // remote.logIn('chatgrabber', 'ABCCBA77145').then(function (batman) {
@@ -14,25 +14,25 @@ const remoteCouch = new PouchDB("http://chatgrabber:ABCCBA77145@astra2441.server
 // });
 
 
-local.changes({
+remoteCouch.changes({
     since: 'now',
     live: true
 }).on('change', getAllMessages);
 
 
-function sync() {
-    local.sync(remoteCouch, {
-        live: true,
-        retry: true
-    }).on('error', function (err) {
-        log("Failed to sync Database", "#ff0000")
-    });
-    log("Syncing Database", "#32bd04");
-}
-
-if (remoteCouch) {
-    sync()
-}
+// function sync() {
+//     local.sync(remoteCouch, {
+//         live: true,
+//         retry: true
+//     }).on('error', function (err) {
+//         log("Failed to sync Database", "#ff0000")
+//     });
+//     log("Syncing Database", "#32bd04");
+// }
+//
+// if (remoteCouch) {
+//     sync()
+// }
 // const sync = PouchDB.sync(local, remoteCouch, {
 //     live: true,
 //     // retry: true
@@ -48,14 +48,14 @@ function syncErrorFrom(err) {
 
 
 export function putMessage(message) {
-    local.put({
+    remoteCouch.put({
         ...message,
         "_id": message.time.toISOString()+message.user
     })
 }
 
 export function getAllMessages() {
-    return local.allDocs({
+    return remoteCouch.allDocs({
         include_docs: true,
         attachments: true
     }).then(res => {
