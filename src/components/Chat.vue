@@ -1,7 +1,8 @@
 <template>
     <div id="chathistory" v-show="first || first === 0">
-        <b-alert fade class="rounded-0" :show="!connected" variant="danger" id="alert">Keine Verbindung zum Internet
+        <b-alert fade class="rounded-0 customalert" :show="!connected" variant="danger" id="alert">Keine Verbindung zum Internet
         </b-alert>
+        <b-alert fade dismissible class="rounded-0 customalert" show="true" variant="primary">{{user.role === "teacher"? "Durch einen Rechtsklick auf eine Nachricht (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen":"Durch einen Rechtsklick auf eine Ihrer Nachrichten (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen"}}</b-alert>
         <b-button v-if="first>0" @click="revealOlder" style="width: 100%">Ältere Nachrichten</b-button>
         <transition-group name="chat" @after-enter="customScroll">
             <chatmessage v-for="message in shortendMessages" :user="user"
@@ -14,25 +15,16 @@
 <script>
     import Chatmessage from "@/components/Chatmessage";
     import ChatsendBar from "@/components/chatsendBar";
-    import {putMessage, getAllMessages} from "@/database";
+    import {putMessage, getAllMessages, getUserId} from "@/database";
     import {mapGetters} from "vuex"
     import store from "@/store/index"
 
     export default {
         name: "Chat",
         components: {ChatsendBar, Chatmessage},
-        props: {
-            user: {
-                type: Number,
-                required: true
-            },
-            room: {
-                type: Number,
-                required: true
-            }
-        },
+
         computed: {
-            ...mapGetters(["messages", "scrollWithChat"]),
+            ...mapGetters(["messages", "scrollWithChat", "user"]),
             shortendMessages() {
                 return this.messages ? this.messages.slice(this.first, this.messages.length) : []
             }
@@ -58,7 +50,7 @@
         methods: {
             send(p) {
                 putMessage({
-                    user: this.user,
+                    user: getUserId(this.user),
                     text: p,
                     time: new Date()
                 })
@@ -70,13 +62,13 @@
             },
             revealOlder() {
                 this.$store.state.scrollWithChat = false;
-                this.first = this.first<50 ? 0: this.first-50;
+                this.first = this.first < 50 ? 0 : this.first - 50;
             },
         },
         data() {
             return {
                 connected: true,
-                first: null
+                first: null,
             }
         },
         watch: {
@@ -101,7 +93,7 @@
         /*max-width: 500px;*/
     }
 
-    #alert {
+    .customalert {
         position: fixed;
         top: 0;
         left: 0;

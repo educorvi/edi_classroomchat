@@ -68,7 +68,21 @@ export function getAllMessages() {
 
 }
 
+export function getUserId({name, pin}) {
+    return name + "_" + pin;
+}
 
+export function areUsersEqual(user1, user2) {
+    return getUserId(user1) === getUserId(user2)
+}
+
+export function deleteChat(message) {
+    putMessage({
+        ...message,
+        deleted: true,
+        time: new Date(message.time)
+    })
+}
 
 
 function log(text, bg) {

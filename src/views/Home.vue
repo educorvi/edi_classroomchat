@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-      <Chat :user="user" :room="room"/>
+      <Chat/>
   </div>
 </template>
 
@@ -15,8 +15,6 @@ export default {
   },
     data() {
         return {
-            user: 12,
-            room: 24
         }
     },
 }
