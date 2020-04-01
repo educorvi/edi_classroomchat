@@ -1,4 +1,4 @@
 module.exports = {
-  publicPath: '/++resource++edi.classroom/assets/',
+  publicPath: '',
   filenameHashing: false
 }
