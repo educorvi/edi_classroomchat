@@ -39,8 +39,16 @@
             window.addEventListener('offline', () => {
                 this.connected = false;
             });
-            window.onscroll = function () {
-                store.state.scrollWithChat = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight;
+            let lastScrollTop = 0;
+            window.onscroll = function (evt) {
+                let st = window.pageYOffset || document.documentElement.scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
+                if (st <= lastScrollTop) {
+                    evt.preventDefault()
+                    store.state.scrollWithChat = false;
+                } else {
+                    store.state.scrollWithChat = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight;
+                }
+                lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
             };
         },
         created() {
@@ -78,11 +86,15 @@
             }
         },
         watch: {
-            scrollWithChat: () => window.scrollTo({
-                top: document.getElementById("chathistory").scrollHeight,
-                left: 0,
-                behavior: "smooth"
-            })
+            scrollWithChat: (newValue) => {
+                if (newValue) {
+                    window.scrollTo({
+                        top: document.getElementById("chathistory").scrollHeight,
+                        left: 0,
+                        behavior: "smooth"
+                    });
+                }
+            }
         }
 
     }

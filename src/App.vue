@@ -1,7 +1,11 @@
 <template>
-  <div id="app" >
+  <div id="app" v-if="!error">
     <Home v-if="finished"></Home>
     <custom-spinner v-else/>
+  </div>
+  <div v-else>
+    <h2 style="color: red">Es gab einen Fehler beim Abrufen der Chatdaten:</h2>
+    <h6 style="color: red"> {{error}}</h6>
   </div>
 </template>
 
@@ -24,15 +28,36 @@
   export default {
     components: {CustomSpinner, Home},
     created() {
-        axios.get("classroomchat").then(res => {
-          this.$store.state.chatdata = res.data
-          setRemote()
-          this.finished = true;
+      const session=this.getCookie("beaker.session");
+      console.log(session);
+        axios.get(`../classroomchat`, {withCredentials: true}).then(res => {
+          if (res.data.error) {
+            this.error = res.data.error;
+          } else {
+            this.$store.state.chatdata = res.data;
+            setRemote()
+            this.finished = true;
+          }
+
         })
     },
     data() {
       return {
-        finished: false
+        finished: false,
+        error: false
+      }
+    },
+    methods: {
+      getCookie(name) {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i];
+          cookie = cookie.split("=");
+          if (cookie[0] === name) {
+            return cookie[1]
+          }
+        }
+        return null;
       }
     },
     computed: {
