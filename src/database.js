@@ -78,8 +78,8 @@ export function getUserId({name, pin}) {
 export function getNameOfUser(user) {
     const classlist = store.getters.classlist;
     // const search = getUserId(user);
-
-    return classlist.filter(listitem => getUserId(listitem) === user)[0].name;
+    const item = classlist.filter(listitem => getUserId(listitem) === user)[0];
+    return item?item.name:"Unbekannt";
 }
 
 export function areUsersEqual(user1, user2) {
