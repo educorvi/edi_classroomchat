@@ -1,8 +1,10 @@
 <template>
     <div id="chathistory" v-show="first || first === 0">
-        <b-alert fade class="rounded-0 customalert" :show="!connected" variant="danger" id="alert">Keine Verbindung zum Internet
-        </b-alert>
-        <b-alert fade dismissible class="rounded-0 customalert" show="true" variant="primary">{{user.role === "teacher"? "Durch einen Rechtsklick auf eine Nachricht (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen":"Durch einen Rechtsklick auf eine Ihrer Nachrichten (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen"}}</b-alert>
+        <div class="sticky">
+            <b-alert fade class="rounded-0 customalert" :show="!connected" variant="danger" id="alert">Keine Verbindung zum Internet. Nachrichten können nicht gesendet werden
+            </b-alert>
+            <b-alert fade dismissible class="rounded-0 customalert" show="true" variant="primary">{{user.role === "teacher"? "Durch einen Rechtsklick auf eine Nachricht (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen":"Durch einen Rechtsklick auf eine Ihrer Nachrichten (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen"}}</b-alert>
+        </div>
         <b-button v-if="first>0" @click="revealOlder" style="width: 100%">Ältere Nachrichten</b-button>
         <transition-group name="chat" @after-enter="customScroll">
             <chatmessage v-for="message in shortendMessages" :user="user"
@@ -57,7 +59,11 @@
             },
             customScroll() {
                 if (this.scrollWithChat) {
-                    window.scrollTo(0, document.getElementById("chathistory").scrollHeight);
+                    window.scrollTo({
+                        top: document.getElementById("chathistory").scrollHeight,
+                        left: 0,
+                        behavior: "smooth"
+                    });
                 }
             },
             revealOlder() {
@@ -72,7 +78,11 @@
             }
         },
         watch: {
-            scrollWithChat: () => window.scrollTo(0, document.getElementById("chathistory").scrollHeight)
+            scrollWithChat: () => window.scrollTo({
+                top: document.getElementById("chathistory").scrollHeight,
+                left: 0,
+                behavior: "smooth"
+            })
         }
 
     }
@@ -93,11 +103,14 @@
         /*max-width: 500px;*/
     }
 
-    .customalert {
+    .sticky {
         position: sticky;
-        top: 0;
+        top: 10px;
         left: 0;
-        width: 100%;
         z-index: 4000;
+    }
+    .customalert {
+        width: 100%;
+
     }
 </style>

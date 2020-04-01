@@ -41,8 +41,6 @@
             handler: function (e) {
                 e.preventDefault();
                 if ((this.isSelf || this.user.role === "teacher") && !this.message.deleted) {
-                    console.log(this.message)
-                    console.log(this.user);
                     this.$bvModal.msgBoxConfirm(`Wollen sie die Nachricht "${this.message.text}" wirklich löschen?`, {
                         title: "Nachricht löschen?",
                         okVariant: "danger",
