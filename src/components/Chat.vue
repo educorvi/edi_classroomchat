@@ -9,7 +9,7 @@
         <div id="overflow" class="customscroll">
             <b-button v-if="first>0" @click="revealOlder" style="width: 100%">Ältere Nachrichten</b-button>
             <transition-group name="chat" @after-enter="customScroll">
-                <chatmessage v-for="message in shortendMessages" :user="user"
+                <chatmessage :id="message._id" v-for="message in shortendMessages" :user="user"
                              :key="message.user+new Date(message.time).toISOString()" :message="message"/>
             </transition-group>
         </div>
@@ -79,8 +79,10 @@
                 }
             },
             revealOlder() {
+                const scrollTo = this.shortendMessages[0]._id;
                 this.$store.state.scrollWithChat = false;
                 this.first = this.first < 50 ? 0 : this.first - 50;
+                document.getElementById(scrollTo).scrollIntoView({behavior: "auto", block: "start"});
             }
         },
         data() {
