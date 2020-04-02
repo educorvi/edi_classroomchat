@@ -1,15 +1,18 @@
 <template>
     <div id="chathistory" v-show="first || first === 0">
         <div class="sticky">
-            <b-alert fade class="rounded-0 customalert" :show="!connected" variant="danger" id="alert">Keine Verbindung zum Internet. Nachrichten können nicht gesendet werden
+            <b-alert fade class="rounded-0 customalert" :show="!connected" variant="danger" id="alert">Keine Verbindung
+                zum Internet. Nachrichten können nicht gesendet werden
             </b-alert>
             <b-alert fade dismissible class="rounded-0 customalert" show="true" variant="primary">{{user.role === "teacher"? "Durch einen Rechtsklick auf eine Nachricht (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen":"Durch einen Rechtsklick auf eine Ihrer Nachrichten (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen"}}</b-alert>
         </div>
         <b-button v-if="first>0" @click="revealOlder" style="width: 100%">Ältere Nachrichten</b-button>
-        <transition-group name="chat" @after-enter="customScroll">
-            <chatmessage v-for="message in shortendMessages" :user="user"
-                         :key="message.user+new Date(message.time).toISOString()" :message="message"/>
-        </transition-group>
+        <div id="overflow">
+            <transition-group name="chat" @after-enter="customScroll">
+                <chatmessage v-for="message in shortendMessages" :user="user"
+                             :key="message.user+new Date(message.time).toISOString()" :message="message"/>
+            </transition-group>
+        </div>
         <chatsend-bar @send="send"/>
     </div>
 </template>
@@ -40,8 +43,8 @@
                 this.connected = false;
             });
             let lastScrollTop = 0;
-            window.onscroll = function (evt) {
-                let st = window.pageYOffset || document.documentElement.scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
+            document.getElementById("overflow").onscroll = function (evt) {
+                let st = document.getElementById("overflow").scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
                 if (st <= lastScrollTop) {
                     evt.preventDefault()
                     store.state.scrollWithChat = false;
@@ -67,7 +70,7 @@
             },
             customScroll() {
                 if (this.scrollWithChat) {
-                    window.scrollTo({
+                    document.getElementById("overflow").scrollTo({
                         top: document.getElementById("chathistory").scrollHeight,
                         left: 0,
                         behavior: "smooth"
@@ -77,7 +80,7 @@
             revealOlder() {
                 this.$store.state.scrollWithChat = false;
                 this.first = this.first < 50 ? 0 : this.first - 50;
-            },
+            }
         },
         data() {
             return {
@@ -88,7 +91,7 @@
         watch: {
             scrollWithChat: (newValue) => {
                 if (newValue) {
-                    window.scrollTo({
+                    document.getElementById("overflow").scrollTo({
                         top: document.getElementById("chathistory").scrollHeight,
                         left: 0,
                         behavior: "smooth"
@@ -112,17 +115,22 @@
     }
 
     #chathistory {
-        /*max-width: 500px;*/
+        max-width: 800px;
     }
 
     .sticky {
         position: sticky;
-        top: 10px;
+        top: 12px;
         left: 0;
         z-index: 4000;
     }
+
     .customalert {
         width: 100%;
+    }
 
+    #overflow {
+        overflow-y: scroll;
+        height: 70vh;
     }
 </style>

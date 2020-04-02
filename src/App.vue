@@ -15,7 +15,8 @@
     margin-right: 12px;
     margin-top: 12px;
     padding-bottom: 90px;
-    /*max-width: 500px;*/
+    display: flex;
+    justify-content: center;
   }
 </style>
 <script>
