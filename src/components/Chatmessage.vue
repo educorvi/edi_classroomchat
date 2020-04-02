@@ -7,7 +7,7 @@
             <b-card-body>
                 <p class="m-n2 mt-n3" v-if="!message.deleted">{{message.text}}</p>
                 <p class="m-n2 mt-n3 text-muted" v-else><i>Diese Nachricht wurde gelöscht</i></p>
-                <p class="mt-2 mb-n3 mr-n3 text-muted float-right">{{new Date(message.time).toLocaleTimeString()}}</p>
+                <p class="mt-2 mb-n3 mr-n3 text-muted float-right">{{!isToday(new Date(message.time))?date+", ":""}} {{new Date(message.time).toLocaleTimeString()}}</p>
             </b-card-body>
         </b-card>
     </div>
@@ -35,6 +35,12 @@
             },
             userName() {
                 return getNameOfUser(this.message.user)
+            },
+            date() {
+                const d = new Date(this.message.time)
+                const dtf = new Intl.DateTimeFormat('en', { year: 'numeric', month: '2-digit', day: '2-digit' })
+                const [{ value: mo },,{ value: da },,{ value: ye }] = dtf.formatToParts(d)
+                return `${da}.${mo}.${ye}`
             }
         },
         methods: {
@@ -53,6 +59,12 @@
                         }
                     });
                 }
+            },
+            isToday(someDate) {
+                const today = new Date()
+                return someDate.getDate() === today.getDate() &&
+                    someDate.getMonth() === today.getMonth() &&
+                    someDate.getFullYear() === today.getFullYear()
 
             }
         }
