@@ -23,6 +23,9 @@
                 newMessage: ""
             }
         },
+        created() {
+
+        },
         methods: {
             send(evt) {
                 evt.preventDefault();
@@ -41,7 +44,7 @@
         /*display: flex;*/
         /*justify-content: space-between;*/
         width: 100%;
-        padding: 12px;
+        padding: 12px 12px 30px;
         background-color: white;
         height: 80px;
         max-width: 900px;

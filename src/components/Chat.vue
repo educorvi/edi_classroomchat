@@ -57,7 +57,8 @@
         created() {
             getAllMessages().then(() => {
                 this.first = this.messages.length - Math.min(this.messages.length, 50);
-                window.scrollTo(0, document.getElementById("chathistory").scrollHeight);
+                document.getElementById("overflow").scrollTo(0, document.getElementById("chathistory").scrollHeight);
+                document.getElementById("senddiv").scrollIntoView({behavior: "smooth", block: "end"});
             });
         },
         methods: {
