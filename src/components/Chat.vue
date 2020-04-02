@@ -72,7 +72,7 @@
             customScroll() {
                 if (this.scrollWithChat) {
                     document.getElementById("overflow").scrollTo({
-                        top: document.getElementById("chathistory").scrollHeight,
+                        top: document.getElementById("chathistory").scrollHeight*2,
                         left: 0,
                         behavior: "smooth"
                     });
