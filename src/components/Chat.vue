@@ -6,8 +6,8 @@
             </b-alert>
             <b-alert fade dismissible class="rounded-0 customalert" show="true" variant="primary">{{user.role === "teacher"? "Durch einen Rechtsklick auf eine Nachricht (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen":"Durch einen Rechtsklick auf eine Ihrer Nachrichten (bzw. an Touchgeräten durch Gedrückthalten der Nachricht) können Sie diese aus dem Chat löschen"}}</b-alert>
         </div>
-        <b-button v-if="first>0" @click="revealOlder" style="width: 100%">Ältere Nachrichten</b-button>
-        <div id="overflow">
+        <div id="overflow" class="customscroll">
+            <b-button v-if="first>0" @click="revealOlder" style="width: 100%">Ältere Nachrichten</b-button>
             <transition-group name="chat" @after-enter="customScroll">
                 <chatmessage v-for="message in shortendMessages" :user="user"
                              :key="message.user+new Date(message.time).toISOString()" :message="message"/>
@@ -57,7 +57,7 @@
         created() {
             getAllMessages().then(() => {
                 this.first = this.messages.length - Math.min(this.messages.length, 50);
-                document.getElementById("overflow").scrollTo(0, document.getElementById("chathistory").scrollHeight);
+                document.getElementById("overflow").scrollTo(0, document.getElementById("chathistory").scrollHeight*4);
                 document.getElementById("senddiv").scrollIntoView({behavior: "smooth", block: "end"});
             });
         },
@@ -72,7 +72,7 @@
             customScroll() {
                 if (this.scrollWithChat) {
                     document.getElementById("overflow").scrollTo({
-                        top: document.getElementById("chathistory").scrollHeight*2,
+                        top: 99999999999999999999999999999,
                         left: 0,
                         behavior: "smooth"
                     });
@@ -133,5 +133,20 @@
     #overflow {
         overflow-y: scroll;
         height: 70vh;
+        padding: 10px;
+    }
+
+    .customscroll::-webkit-scrollbar-track {
+        /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
+        border-radius: 0;
+        background-color: rgba(245, 245, 245, 0);
+    }
+    .customscroll::-webkit-scrollbar {
+        width: 5px;
+        background-color: #F5F5F5;
+    }
+    .customscroll::-webkit-scrollbar-thumb {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: #007bff;
     }
 </style>

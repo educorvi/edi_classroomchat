@@ -29,8 +29,8 @@
   export default {
     components: {CustomSpinner, Home},
     created() {
-      const session=this.getCookie("beaker.session");
-      console.log(session);
+      // const session=this.getCookie("beaker.session");
+      // console.log(session);
         axios.get(`../classroomchat`, {withCredentials: true}).then(res => {
           if (res.data.error) {
             this.error = res.data.error;
