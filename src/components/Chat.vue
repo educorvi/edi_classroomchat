@@ -70,30 +70,42 @@
                 })
             },
             customScroll() {
-                if (this.scrollWithChat) {
-                    document.getElementById("overflow").scrollTo({
-                        top: 99999999999999999999999999999,
-                        left: 0,
-                        behavior: "smooth"
+                // eslint-disable-next-line no-constant-condition
+                if (this.reveal === 0) {
+
+                    // document.getElementById("overflow").scrollTo({
+                    //     top: 99999999999999999999999999999,
+                    //     behavior: "smooth"
+                    // });
+                    document.getElementById(this.shortendMessages[this.shortendMessages.length - 1]._id).scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
                     });
+
+                } else {
+                    this.reveal--;
                 }
             },
             revealOlder() {
                 const scrollTo = this.shortendMessages[0]._id;
                 this.$store.state.scrollWithChat = false;
+                this.reveal = this.first < 50 ? this.first : 50;
                 this.first = this.first < 50 ? 0 : this.first - 50;
-                document.getElementById(scrollTo).scrollIntoView({behavior: "auto", block: "start"});
+                document.getElementById(scrollTo).scrollIntoView({block: "start"});
             }
         },
         data() {
             return {
                 connected: true,
                 first: null,
+                reveal: 0
             }
         },
         watch: {
+            // eslint-disable-next-line no-unused-vars
             scrollWithChat: (newValue) => {
-                if (newValue) {
+                // eslint-disable-next-line no-constant-condition
+                if (false) {
                     document.getElementById("overflow").scrollTo({
                         top: document.getElementById("chathistory").scrollHeight,
                         left: 0,
