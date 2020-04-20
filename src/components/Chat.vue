@@ -71,7 +71,7 @@
             },
             customScroll() {
                 // eslint-disable-next-line no-constant-condition
-                if (this.reveal === 0) {
+                if (this.reveal === 0 && this.messages.length > 7) {
 
                     // document.getElementById("overflow").scrollTo({
                     //     top: 99999999999999999999999999999,
